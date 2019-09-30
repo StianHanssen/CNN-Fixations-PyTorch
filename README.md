@@ -1,6 +1,6 @@
 # CNN-Fixations-PyTorch
 
-An impementation of CNN Fixations for PyTorch.
+An impementation of CNN Fixations for PyTorch based on the paper [CNN Fixations: An Unraveling Approach to Visualize the Discriminative Image Regions](https://ieeexplore.ieee.org/document/8537979 "IEEE: CNN Fixations").
 
 ![CNN Fixations for image of 0](images/0.png)
 ![CNN Fixations for image of 9](images/9.png)
@@ -22,11 +22,11 @@ For running the mnist example use command:
   * The dictionary is of the form: dict\[module\] = \[LayerInfo1, LayerInfo2, ...\].
   * A module can be used multiple times in a model, but a LayerInfo object is spesific to a particular forward pass of that module.
     * A LayerInfo object contains: The name of the module it belongs to, and the input and output of a particular forward pass of that module.
-  * To keep track and use the right LayerInfo object when a module is used multiple times in a model, make sure to pop() off the list of LayerInfo objects before leaving the custom function (see Fixations class on how it is done).
+  * To keep track and use the right LayerInfo object when a module is used multiple times in a model; make sure to pop() off the list of LayerInfo objects before leaving the custom function (see Fixations class on how it is done).
 
 ## TODO
 
 * Make the code run faster/more efficiently
 * Add support for more basic PyTorch modules such as:
   * Dropout
-  * Various kind of pooling
+  * Various kinds of pooling
