@@ -1,6 +1,6 @@
 # CNN-Fixations-PyTorch
 
-An impementation of CNN Fixations for PyTorch based on the paper [CNN Fixations: An Unraveling Approach to Visualize the Discriminative Image Regions](https://ieeexplore.ieee.org/document/8537979 "IEEE: CNN Fixations").
+An impementation of CNN Fixations for PyTorch based on the paper [CNN Fixations: An Unraveling Approach to Visualize the Discriminative Image Regions](https://ieeexplore.ieee.org/document/8537979 "IEEE: CNN Fixations"). A generic method that requires no architectural changes, additional training, or gradient computation, and computes the important image locations (CNN fixations) on most CNN architectures.
 
 ![CNN Fixations for image of 0](images/0.png)
 ![CNN Fixations for image of 9](images/9.png)
