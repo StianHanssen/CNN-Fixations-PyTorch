@@ -4,8 +4,9 @@ CNN Fixations for Pytorch
 To run CNN Fixations on a trained mnist model use command:
 python visualize_mnist.py --test-batch-size [batch_size] --visualize-model "models/mnist_cnn.pt" --no-cuda
 '''
-from models import mnist
 import torch
+
+from models import mnist
 from cnn_fixations.fixations import Fixations, to_cpu
 import cnn_fixations.utils as U
 

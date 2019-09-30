@@ -1,9 +1,10 @@
-import cnn_fixations.utils as U
 import torch
 import torch.nn as nn
 import torch.nn.modules as M
 from collections import defaultdict
 from contextlib import contextmanager
+
+from cnn_fixations import utils as U
 
 
 def to_cpu(elements):
@@ -101,11 +102,10 @@ class Fixations:
 
     def fully_connected(self, fixations, module):
         layer_info = self._layer_info_dict[module].pop()
-        # Fixation shape: (B, d1)
+        # Fixation format: (B, d1)
         weights = module.weight
         activations = layer_info.in_data[0]
         next_fixations = []
-        #C = torch.stack([activations[i] * weights for i in range(len(activations))], 0)
         for neuron_pos in fixations:
             C = activations * weights[neuron_pos[1]]
             next_fixations += list((C > 0).nonzero())
@@ -115,7 +115,7 @@ class Fixations:
     def convolution(self, fixations, module):
         layer_info = self._layer_info_dict[module].pop()
         fixations = U.convert_flat_fixations(fixations, layer_info)
-        # Fixation shape: (B, C, d1, d2, ..., dn) 
+        # Fixation format: (B, C, d1, d2, ..., dn)
         weights = module.weight
         padding = tuple(U.as_tensor(module.padding).repeat_interleave(2))
         activations = nn.functional.pad(layer_info.in_data[0], padding)
@@ -133,7 +133,7 @@ class Fixations:
             pos = U.unflatten(torch.argmax(C[ch]), weight[ch].shape)  # Position of neuron with greatest impact in channel ch
             pos += lower_bound[1:] - U.as_tensor(module.padding)
             ch.unsqueeze_(0)  # Making channel into a 1D tensor with one element (for the concatination)
-            batch.unsqueeze_(0) # Same as above
+            batch.unsqueeze_(0)  # Same as above
             new_fixation = torch.cat((batch, ch, pos), 0)
             assert all(new_fixation < U.as_tensor(activations.shape)), f"Point {new_fixation} doesn't fit in shape: {activations.shape}"
             next_fixations.append(new_fixation)  # Storing full position (B, C, d1, d2, ..., dn)
@@ -142,7 +142,7 @@ class Fixations:
     def maxpool(self, fixations, module):
         layer_info = self._layer_info_dict[module].pop()
         fixations = U.convert_flat_fixations(fixations, layer_info)
-        # Fixation shape: (B, C, d1, d2, ..., dn)
+        # Fixation format: (B, C, d1, d2, ..., dn)
         max_pool = module
         activations = layer_info.in_data[0]
 
@@ -157,5 +157,5 @@ class Fixations:
         next_fixations = torch.cat([fixations[:, :2], next_fixations], dim=1)
         return next_fixations
 
-    def pass_on(self, fixations, layer_info):
+    def pass_on(self, fixations, module):
         return fixations

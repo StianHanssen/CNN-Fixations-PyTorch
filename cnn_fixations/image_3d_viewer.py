@@ -9,6 +9,7 @@ Modified version
 """
 import numpy as np
 import matplotlib.pyplot as plt
+
 from cnn_fixations import utils as U
 
 

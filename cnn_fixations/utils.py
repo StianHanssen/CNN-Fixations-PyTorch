@@ -9,9 +9,9 @@ import numpy as np
 import torch
 import scipy.ndimage.filters as scifil
 import matplotlib.pyplot as plt
-from numpy import ravel_multi_index, unravel_index, unique as npunique
-from cnn_fixations import image_3d_viewer as i3v
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+
+from cnn_fixations import image_3d_viewer as i3v
 
 
 def zip_batch_number(predictions):
@@ -24,14 +24,6 @@ def as_tensor(iterable):
     return torch.LongTensor(list(iterable))
 
 
-def slice_weight(lower_bound, upper_bound, shape, padding, dilation, act_shape): # UNFINISHED
-    act_shape += padding
-    lower_crop = -(lower_bound - padding) / dilation
-    lower_crop = torch.where(lower_crop > 0, lower_crop, torch.zeros(lower_crop.shape, dtype=torch.long))
-    upper_crop = (act_shape - upper_bound) / dilation
-    upper_crop = torch.where(upper_crop > 0, upper_crop, shape)
-
-
 def get_slicer(neuron_pos, kernel_size, stride, dilation):
     lower_bound = neuron_pos * stride
     lower_bound[0] = 0
@@ -42,11 +34,11 @@ def get_slicer(neuron_pos, kernel_size, stride, dilation):
 
 
 def unflatten(indices, shape):
-    return torch.LongTensor(unravel_index(indices, list(shape))).t()
+    return torch.LongTensor(np.unravel_index(indices, list(shape))).t()
 
 
 def flatten(points, shape):
-    return torch.from_numpy(ravel_multi_index(points.t().numpy(), list(shape)))
+    return torch.from_numpy(np.ravel_multi_index(points.t().numpy(), list(shape)))
 
 
 def convert_flat_fixations(fixations, layer_info):
@@ -58,7 +50,7 @@ def convert_flat_fixations(fixations, layer_info):
 
 
 def unique(fixations, d=False):
-    return torch.from_numpy(npunique(fixations.numpy(), axis=0))
+    return torch.from_numpy(np.unique(fixations.numpy(), axis=0))
 
 
 def chunk_batch(points, remove_chanels=True):
@@ -70,9 +62,9 @@ def chunk_batch(points, remove_chanels=True):
     '''
     if remove_chanels:
         points = np.concatenate([points[:, :1], points[:, 2:]], axis=1)
-    ordered = points[points[:, 0].argsort(axis=0)] # Order so points from a batch follow eachother
+    ordered = points[points[:, 0].argsort(axis=0)]  # Order so points from a batch follow eachother
     batch_sizes = np.bincount(ordered[:, 0]).tolist()
-    section_indices = np.cumsum(batch_sizes)[:-1] # Get the divider between each mini batch
+    section_indices = np.cumsum(batch_sizes)[:-1]  # Get the divider between each mini batch
     return np.split(ordered[:, 1:], section_indices, axis=0)
 
 
