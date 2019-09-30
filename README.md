@@ -1,6 +1,6 @@
 # CNN-Fixations-PyTorch
 
-An impementation of CNN Fixations for PyTorch.
+An impementation of CNN Fixations for PyTorch based on the paper [CNN Fixations: An Unraveling Approach to Visualize the Discriminative Image Regions](https://ieeexplore.ieee.org/document/8537979 "IEEE: CNN Fixations").
 
 ![CNN Fixations for image of 0](images/0.png)
 ![CNN Fixations for image of 9](images/9.png)
